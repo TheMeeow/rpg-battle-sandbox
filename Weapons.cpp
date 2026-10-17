@@ -42,7 +42,7 @@ AttackData Sword::Attack(double modificator) {
 
 // --- Bow Implementation ---
 
-Bow::Bow() : Weapon(DEFAULT_RANGE), arrows(DEFAULT_COUNT, Arrow(baseDamage / DEFAULT_COUNT)) {}
+Bow::Bow() : Weapon(DEFAULT_RANGE), arrows(DEFAULT_COUNT, Arrow(baseDamage)) {}
 
 Bow::Bow(unsigned int bow_range, int bow_damage, const std::string& bow_name, unsigned int arrowCount) 
     : Weapon(bow_range, bow_damage, bow_name), 

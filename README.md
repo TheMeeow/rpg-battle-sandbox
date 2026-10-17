@@ -43,3 +43,29 @@
 * `main.cpp` - Точка входа и интеграционный тест механик.
 
 ---
+
+## Сборка и запуск
+
+### Требования
+
+- Git.
+- CMake версии 3.13 или новее. Команда `cmake` должна быть доступна в терминале.
+- Для Windows: Visual Studio 2022 с компонентом «Разработка классических приложений на C++».
+- Для Linux: GCC или Clang и Make.
+- Для macOS: Xcode Command Line Tools.
+
+### Пример сборки через терминал:
+```bash
+# 1. Клонирование репозитория
+git clone https://github.com/TheMeeow/rpg-battle-sandbox.git
+cd rpg-battle-sandbox
+
+# 2. Генерация файлов сборки
+cmake -S . -B build
+
+# 3. Компиляция проекта
+cmake --build build
+
+# 4. Запуск приложения
+./build/Debug/GameApp
+```
