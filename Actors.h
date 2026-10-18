@@ -17,7 +17,7 @@ public:
     MyActor();
     virtual ~MyActor();
 
-    std::string GetName() const;
+    const std::string& GetName() const;
     int GetHealth() const;
     bool IsDead() const;
 

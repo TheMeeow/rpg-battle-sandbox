@@ -5,10 +5,11 @@
  * @brief Data Transfer Object describing the result of a weapon attack.
  */
 struct AttackData {
+    enum class ActionVerb { Punches, Slashes, Shoots, Bites, Undefined };
     bool success;            ///< Flag indicating if the attack was successful (e.g., enough ammo)
     int damage;              ///< Calculated damage amount
-    std::string actionVerb;  ///< Verb describing the action (e.g., "attacks", "shoots")
-    std::string weaponName;  ///< Name of the used weapon
+    ActionVerb actionVerb;  ///< Verb describing the action
+    std::string_view weaponName;  ///< Name of the used weapon
 };
 
 /**
@@ -18,8 +19,8 @@ struct AIUpdateReport {
     enum class State { Idling, TargetLost, Attacking, Dead };
     
     State state;             ///< Current state of the AI
-    std::string actorName;   ///< Name of the entity owning the AI
-    std::string targetName;  ///< Name of the pursued target (if any)
+    std::string_view actorName;   ///< Name of the entity owning the AI
+    std::string_view targetName;  ///< Name of the pursued target (if any)
     AttackData attackInfo;   ///< Attack data (populated only in the Attacking state)
 };
 

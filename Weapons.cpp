@@ -37,7 +37,7 @@ unsigned int Sword::GetLength() const { return length; }
 AttackData Sword::Attack(double modificator) {
     auto modif_damage = modificator * baseDamage;
     RecalculateDamage(-baseDamage * WEAR_COEFF / 100); // Not ideal, redo
-    return {true, static_cast<int>(modif_damage), "slashes", name};
+    return {true, static_cast<int>(modif_damage), AttackData::ActionVerb::Slashes, name};
 }
 
 // --- Bow Implementation ---
@@ -48,22 +48,21 @@ Bow::Bow(unsigned int bow_range, int bow_damage, const std::string& bow_name, un
     : Weapon(bow_range, bow_damage, bow_name), 
         arrows(arrowCount == 0 
             ? std::vector<Arrow> {} 
-            : std::vector<Arrow> {arrowCount, Arrow(baseDamage)}) {}
+            : std::vector<Arrow>(arrowCount, Arrow(baseDamage))) {}
 
 Bow::Bow(int bow_damage, const std::string& bow_name, unsigned int arrowCount) 
     : Bow(DEFAULT_RANGE, bow_damage, bow_name, arrowCount) {}
 
 void Bow::AddArrow(const Arrow& arrow) {
     arrows.push_back(arrow);
-    RecalculateDamage(arrows.back().GetDamage());
 }
 
 AttackData Bow::Attack(double modificator) {
     if (!arrows.empty()) {
         auto modif_damage = modificator * arrows.back().GetDamage();
         arrows.pop_back();
-        return {true, static_cast<int>(modif_damage), "shoots an arrow at", name};
+        return {true, static_cast<int>(modif_damage), AttackData::ActionVerb::Shoots, name};
     } else {
-        return {false, 0, "tries to shoot but has no arrows for", name};
+        return {false, 0, AttackData::ActionVerb::Shoots, name};
     }
 }

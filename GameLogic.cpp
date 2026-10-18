@@ -11,6 +11,26 @@ bool FirstHasAdvantage(MyActor& actor1, MyActor& actor2) {
         || (actor1.GetAttackRange() == actor2.GetAttackRange() && coin(gen) == 0);
 }
 
+std::string_view ActionVerbToString(AttackData::ActionVerb verb) {
+    switch (verb)
+        {
+        case AttackData::ActionVerb::Punches:
+            return "punches";
+
+        case AttackData::ActionVerb::Slashes:
+            return "slashes";
+
+        case AttackData::ActionVerb::Shoots:
+            return "shoots an arrow at";
+
+        case AttackData::ActionVerb::Bites:
+            return "bites";
+                    
+        default:
+            return "attacks";
+        }
+}
+
 void Battle(MyActor& actor1, MyActor& actor2, unsigned int rounds) {
     if(actor1.IsDead() || actor2.IsDead()) {
         std::cout << "\nBattle between " << actor1.GetName() << " and " 
@@ -33,8 +53,8 @@ void Battle(MyActor& actor1, MyActor& actor2, unsigned int rounds) {
         AttackData attackResult = attacker.Attack(defender);
 
         if (attackResult.success) {
-            std::cout << attacker.GetName() << " " << attackResult.actionVerb << " " 
-                      << defender.GetName() << " with " << attackResult.weaponName 
+            std::cout << attacker.GetName() << " " << ActionVerbToString(attackResult.actionVerb) 
+                      << " " << defender.GetName() << " with " << attackResult.weaponName 
                       << " and deals " << attackResult.damage << " damage!\n";
             std::cout << defender.GetName() << "'s health decreased to " << defender.GetHealth() << ".\n";        
             
@@ -43,7 +63,18 @@ void Battle(MyActor& actor1, MyActor& actor2, unsigned int rounds) {
                 break;
             }
         } else {
-            std::cout << attacker.GetName() << " " << attackResult.actionVerb << ".\n";
+            std::string actionVerb;
+                    switch (attackResult.actionVerb)
+                    {
+                    case AttackData::ActionVerb::Shoots:
+                        actionVerb = "tries to shoot, but has no arrows";
+                        break;
+
+                    default:
+                        actionVerb = "tries to attack, but misses";
+                        break;
+                    }
+            std::cout << attacker.GetName() << " " << actionVerb << ".\n";
         }
 
         a1Attacks = !a1Attacks;
@@ -75,7 +106,7 @@ void AIUpdate(const std::vector<std::shared_ptr<Enemy>>& enemies) {
                 std::cout << "[AI] " << report.actorName << " pursues " << report.targetName << "!\n";
                 if (report.attackInfo.success) {
                     std::cout << "  -> " << report.actorName << " "
-                              << report.attackInfo.actionVerb << " "  
+                              << ActionVerbToString(report.attackInfo.actionVerb) << " "  
                               << report.targetName << " and deals " 
                               << report.attackInfo.damage << " damage!\n";
                 }

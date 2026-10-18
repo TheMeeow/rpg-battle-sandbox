@@ -11,7 +11,7 @@ MyActor::~MyActor() {
     std::cout << "[SYSTEM LOG]: Memory freed for Actor '" << name << "'\n";
 }
 
-std::string MyActor::GetName() const { return name; }
+const std::string& MyActor::GetName() const { return name; }
 int MyActor::GetHealth() const { return health; }
 bool MyActor::IsDead() const { return !isAlive; }
 unsigned int MyActor::GetAttackRange() const { return 1; }
@@ -43,9 +43,9 @@ unsigned int Player::GetAttackRange() const {
 }
 
 AttackData Player::Attack(MyActor& target) {
-    if (IsDead() || target.IsDead()) return {false, 0, "", ""};
+    if (IsDead() || target.IsDead()) return {false, 0, AttackData::ActionVerb::Undefined, ""};
 
-    AttackData weaponAttack = myWeapon ? myWeapon->Attack() : AttackData{true, 1, "punches", "bare hands"};
+    AttackData weaponAttack = myWeapon ? myWeapon->Attack() : AttackData{true, 1, AttackData::ActionVerb::Punches, "bare hands"};
     
     int dealtDamage = 0;
     if (weaponAttack.success) {
@@ -72,10 +72,10 @@ Enemy::Enemy(std::weak_ptr<Player> target)
     : MyActor(), myDamage(DEFAULT_ENEMY_DAMAGE), target(std::move(target)) {}
 
 AttackData Enemy::Attack(MyActor& targetActor) {
-    if (IsDead() || targetActor.IsDead()) return {false, 0, "", ""};
+    if (IsDead() || targetActor.IsDead()) return {false, 0, AttackData::ActionVerb::Undefined, ""};
     
     int dealtDamage = targetActor.TakeDamage(myDamage);
-    return {true, dealtDamage, "bites", "fangs"};
+    return {true, dealtDamage, AttackData::ActionVerb::Bites, "fangs"};
 }
 
 void Enemy::Die() {
